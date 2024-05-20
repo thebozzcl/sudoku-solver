@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public enum CellValues {
+public enum SudokuCellValues {
     R1C1B1V1(1, 1, 1, 1),
     R1C1B1V2(1, 1, 1, 2),
     R1C1B1V3(1, 1, 1, 3),
