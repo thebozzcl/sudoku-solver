@@ -15,61 +15,52 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @UtilityClass
 public class SudokuUtils {
-    private Boolean[] getEmptyAcceptedValues() {
-        final Boolean[] empty = new Boolean[SudokuCellValues.values().length];
-        Arrays.fill(empty, false);
-        return empty;
-    }
-
     public Constraint rowColumnConstraint(final int row, final int col) {
-        final Boolean[] values = getEmptyAcceptedValues();
-
-        Arrays.stream(SudokuCellValues.values())
-                .filter(v -> v.getRow() == row && v.getCol() == col)
-                .mapToInt(Enum::ordinal)
-                .forEach(i -> values[i] = true);
-
-        return new Constraint(String.format("R%dC%d", row, col), values);
+        return ConstraintUtils.fromAcceptedEnumValues(
+                String.format("R%dC%d", row, col),
+                Arrays.stream(SudokuCellValues.values())
+                        .filter(v -> v.getRow() == row && v.getCol() == col)
+                        .collect(Collectors.toSet()),
+                SudokuCellValues.class
+        );
     }
 
     public Constraint rowNumberConstraint(final int row, final int val) {
-        final Boolean[] values = getEmptyAcceptedValues();
-
-        Arrays.stream(SudokuCellValues.values())
-                .filter(v -> v.getRow() == row && v.getValue() == val)
-                .mapToInt(Enum::ordinal)
-                .forEach(i -> values[i] = true);
-
-        return new Constraint(String.format("R%dV%d", row, val), values);
+        return ConstraintUtils.fromAcceptedEnumValues(
+                String.format("R%dV%d", row, val),
+                Arrays.stream(SudokuCellValues.values())
+                        .filter(v -> v.getRow() == row && v.getValue() == val)
+                        .collect(Collectors.toSet()),
+                SudokuCellValues.class
+        );
     }
 
     public Constraint columnNumberConstraint(final int col, final int val) {
-        final Boolean[] values = getEmptyAcceptedValues();
-
-        Arrays.stream(SudokuCellValues.values())
-                .filter(v -> v.getCol() == col && v.getValue() == val)
-                .mapToInt(Enum::ordinal)
-                .forEach(i -> values[i] = true);
-
-        return new Constraint(String.format("C%dV%d", col, val), values);
+        return ConstraintUtils.fromAcceptedEnumValues(
+                String.format("C%dV%d", col, val),
+                Arrays.stream(SudokuCellValues.values())
+                        .filter(v -> v.getCol() == col && v.getValue() == val)
+                        .collect(Collectors.toSet()),
+                SudokuCellValues.class
+        );
     }
 
     public Constraint boxNumberConstraint(final int box, final int val) {
-        final Boolean[] values = getEmptyAcceptedValues();
-
-        Arrays.stream(SudokuCellValues.values())
-                .filter(v -> v.getBox() == box && v.getValue() == val)
-                .mapToInt(Enum::ordinal)
-                .forEach(i -> values[i] = true);
-
-        return new Constraint(String.format("B%dV%d", box, val), values);
+        return ConstraintUtils.fromAcceptedEnumValues(
+                String.format("B%dV%d", box, val),
+                Arrays.stream(SudokuCellValues.values())
+                        .filter(v -> v.getBox() == box && v.getValue() == val)
+                        .collect(Collectors.toSet()),
+                SudokuCellValues.class
+        );
     }
 
-    public Set<Constraint> createEmptyConstraints() {
+    public Set<Constraint> createEmptySudokuConstraints() {
         final Set<Constraint> constraints = new HashSet<>();
 
         IntStream.range(1, 10).forEach(i -> IntStream.range(1, 10)
@@ -129,7 +120,7 @@ public class SudokuUtils {
             }
         }
 
-        ExactCoverState exactCoverState = ExactCoverStateUtils.emptyForEnum(SudokuCellValues.class, SudokuUtils.createEmptyConstraints());
+        ExactCoverState exactCoverState = ExactCoverStateUtils.emptyForEnum(SudokuCellValues.class, SudokuUtils.createEmptySudokuConstraints());
         for (final Integer setValue : setValues) {
             exactCoverState = ExactCoverStateUtils.updateBoardState(exactCoverState, setValue);
         }

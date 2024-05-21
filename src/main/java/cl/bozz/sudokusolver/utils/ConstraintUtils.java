@@ -1,6 +1,5 @@
 package cl.bozz.sudokusolver.utils;
 
-import cl.bozz.sudokusolver.model.SudokuCellValues;
 import cl.bozz.sudokusolver.model.Constraint;
 import lombok.experimental.UtilityClass;
 
@@ -10,10 +9,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @UtilityClass
 public class ConstraintUtils {
+    public <E extends Enum<?>> Constraint fromAcceptedEnumValues(final String name, final Set<E> acceptedValues, final Class<E> enumClass) {
+        final Boolean[] accepted = new Boolean[enumClass.getEnumConstants().length];
+        Arrays.fill(accepted, false);
+        acceptedValues.stream().mapToInt(Enum::ordinal).forEach(n -> accepted[n] = true);
+        return new Constraint(name, accepted);
+    }
 
     public Set<Constraint> findConstraintsWithValue(final Set<Constraint> constraints, final int value) {
         return constraints.stream()
