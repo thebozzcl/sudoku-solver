@@ -1,9 +1,9 @@
 package cl.bozz.sudokusolver.utils;
 
 import cl.bozz.sudokusolver.Main;
-import cl.bozz.sudokusolver.model.Constraint;
+import cl.bozz.sudokusolver.model.ExactCoverConstraint;
 import cl.bozz.sudokusolver.model.SudokuCellValues;
-import cl.bozz.sudokusolver.model.ExactCoverState;
+import cl.bozz.sudokusolver.model.ExactCoverStep;
 import lombok.experimental.UtilityClass;
 
 import java.io.BufferedReader;
@@ -20,8 +20,8 @@ import java.util.stream.IntStream;
 
 @UtilityClass
 public class SudokuUtils {
-    public Constraint rowColumnConstraint(final int row, final int col) {
-        return ConstraintUtils.fromAcceptedEnumValues(
+    public ExactCoverConstraint rowColumnConstraint(final int row, final int col) {
+        return ExactCoverConstraintUtils.fromAcceptedEnumValues(
                 String.format("R%dC%d", row, col),
                 Arrays.stream(SudokuCellValues.values())
                         .filter(v -> v.getRow() == row && v.getCol() == col)
@@ -30,8 +30,8 @@ public class SudokuUtils {
         );
     }
 
-    public Constraint rowNumberConstraint(final int row, final int val) {
-        return ConstraintUtils.fromAcceptedEnumValues(
+    public ExactCoverConstraint rowNumberConstraint(final int row, final int val) {
+        return ExactCoverConstraintUtils.fromAcceptedEnumValues(
                 String.format("R%dV%d", row, val),
                 Arrays.stream(SudokuCellValues.values())
                         .filter(v -> v.getRow() == row && v.getValue() == val)
@@ -40,8 +40,8 @@ public class SudokuUtils {
         );
     }
 
-    public Constraint columnNumberConstraint(final int col, final int val) {
-        return ConstraintUtils.fromAcceptedEnumValues(
+    public ExactCoverConstraint columnNumberConstraint(final int col, final int val) {
+        return ExactCoverConstraintUtils.fromAcceptedEnumValues(
                 String.format("C%dV%d", col, val),
                 Arrays.stream(SudokuCellValues.values())
                         .filter(v -> v.getCol() == col && v.getValue() == val)
@@ -50,8 +50,8 @@ public class SudokuUtils {
         );
     }
 
-    public Constraint boxNumberConstraint(final int box, final int val) {
-        return ConstraintUtils.fromAcceptedEnumValues(
+    public ExactCoverConstraint boxNumberConstraint(final int box, final int val) {
+        return ExactCoverConstraintUtils.fromAcceptedEnumValues(
                 String.format("B%dV%d", box, val),
                 Arrays.stream(SudokuCellValues.values())
                         .filter(v -> v.getBox() == box && v.getValue() == val)
@@ -60,8 +60,8 @@ public class SudokuUtils {
         );
     }
 
-    public Set<Constraint> createEmptySudokuConstraints() {
-        final Set<Constraint> constraints = new HashSet<>();
+    public Set<ExactCoverConstraint> createEmptySudokuConstraints() {
+        final Set<ExactCoverConstraint> constraints = new HashSet<>();
 
         IntStream.range(1, 10).forEach(i -> IntStream.range(1, 10)
                 .forEach(j -> {
@@ -75,7 +75,7 @@ public class SudokuUtils {
         return constraints;
     }
 
-    public String toPrettyString(final ExactCoverState exactCoverState) {
+    public String toPrettyString(final ExactCoverStep exactCoverStep) {
         final List<String> lines = new java.util.ArrayList<>(List.of(
                 ".........",
                 ".........",
@@ -88,7 +88,7 @@ public class SudokuUtils {
                 "........."
         ));
 
-        exactCoverState.values().stream()
+        exactCoverStep.values().stream()
                 .map(n -> SudokuCellValues.values()[n])
                 .forEach(value -> {
                     char[] newLine = lines.get(value.getRow() - 1).toCharArray();
@@ -102,7 +102,7 @@ public class SudokuUtils {
         return String.join("\n", lines);
     }
 
-    public ExactCoverState readSudokuFromResource(final String resourceName) throws IOException {
+    public ExactCoverStep readSudokuFromResource(final String resourceName) throws IOException {
         int cellOffset = 0;
         final Set<Integer> setValues = new HashSet<>();
         try (
@@ -120,10 +120,10 @@ public class SudokuUtils {
             }
         }
 
-        ExactCoverState exactCoverState = ExactCoverStateUtils.emptyForEnum(SudokuCellValues.class, SudokuUtils.createEmptySudokuConstraints());
+        ExactCoverStep exactCoverStep = ExactCoverStepUtils.emptyForEnum(SudokuCellValues.class, SudokuUtils.createEmptySudokuConstraints());
         for (final Integer setValue : setValues) {
-            exactCoverState = ExactCoverStateUtils.updateBoardState(exactCoverState, setValue);
+            exactCoverStep = ExactCoverStepUtils.updateState(exactCoverStep, setValue);
         }
-        return exactCoverState;
+        return exactCoverStep;
     }
 }
