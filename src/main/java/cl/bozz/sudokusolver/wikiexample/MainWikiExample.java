@@ -3,13 +3,12 @@ package cl.bozz.sudokusolver.wikiexample;
 import cl.bozz.sudokusolver.algorithm.KnuthAlgorithmXDfs;
 import cl.bozz.sudokusolver.algorithm.model.ExactCoverStep;
 
-import java.io.IOException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class MainWikiExample {
 
-    public static void main(final String[] args) throws IOException {
+    public static void main(final String[] args) {
         final ExactCoverStep initialBoard = WikiExampleUtils.wikiExampleInitialStep();
 
         final Set<ExactCoverStep> completeBoards = new KnuthAlgorithmXDfs(false).runAlgorithm(initialBoard);

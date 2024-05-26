@@ -106,7 +106,7 @@ public class SudokuUtils {
         int cellOffset = 0;
         final Set<Integer> setValues = new HashSet<>();
         try (
-                final InputStream inputStream = MainSudoku.class.getClassLoader().getResourceAsStream(resourceName);
+                final InputStream inputStream = SudokuUtils.class.getClassLoader().getResourceAsStream(resourceName);
                 final InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
                 final BufferedReader reader = new BufferedReader(streamReader)
         ) {
