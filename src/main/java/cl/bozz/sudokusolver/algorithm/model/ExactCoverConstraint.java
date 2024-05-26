@@ -1,4 +1,4 @@
-package cl.bozz.sudokusolver.model;
+package cl.bozz.sudokusolver.algorithm.model;
 
 public record ExactCoverConstraint(String name, Boolean[] acceptedValues) {
     @Override

@@ -1,4 +1,4 @@
-package cl.bozz.sudokusolver.model;
+package cl.bozz.sudokusolver.algorithm.model;
 
 import java.util.Set;
 import java.util.stream.Collectors;

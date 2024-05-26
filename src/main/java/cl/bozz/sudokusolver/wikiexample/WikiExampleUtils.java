@@ -1,8 +1,9 @@
-package cl.bozz.sudokusolver.utils;
+package cl.bozz.sudokusolver.wikiexample;
 
-import cl.bozz.sudokusolver.model.ExactCoverConstraint;
-import cl.bozz.sudokusolver.model.ExactCoverStep;
-import cl.bozz.sudokusolver.model.WikiExampleValues;
+import cl.bozz.sudokusolver.algorithm.model.ExactCoverConstraint;
+import cl.bozz.sudokusolver.algorithm.model.ExactCoverStep;
+import cl.bozz.sudokusolver.algorithm.utils.ExactCoverConstraintUtils;
+import cl.bozz.sudokusolver.algorithm.utils.ExactCoverStepUtils;
 import lombok.experimental.UtilityClass;
 
 import java.util.Set;

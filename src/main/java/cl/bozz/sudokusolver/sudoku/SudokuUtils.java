@@ -1,9 +1,9 @@
-package cl.bozz.sudokusolver.utils;
+package cl.bozz.sudokusolver.sudoku;
 
-import cl.bozz.sudokusolver.MainSudoku;
-import cl.bozz.sudokusolver.model.ExactCoverConstraint;
-import cl.bozz.sudokusolver.model.SudokuCellValues;
-import cl.bozz.sudokusolver.model.ExactCoverStep;
+import cl.bozz.sudokusolver.algorithm.model.ExactCoverConstraint;
+import cl.bozz.sudokusolver.algorithm.model.ExactCoverStep;
+import cl.bozz.sudokusolver.algorithm.utils.ExactCoverConstraintUtils;
+import cl.bozz.sudokusolver.algorithm.utils.ExactCoverStepUtils;
 import lombok.experimental.UtilityClass;
 
 import java.io.BufferedReader;

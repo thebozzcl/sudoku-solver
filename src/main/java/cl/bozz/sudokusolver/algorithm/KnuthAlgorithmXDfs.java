@@ -1,9 +1,9 @@
 package cl.bozz.sudokusolver.algorithm;
 
-import cl.bozz.sudokusolver.model.ExactCoverConstraint;
-import cl.bozz.sudokusolver.model.ExactCoverStep;
-import cl.bozz.sudokusolver.utils.ExactCoverConstraintUtils;
-import cl.bozz.sudokusolver.utils.ExactCoverStepUtils;
+import cl.bozz.sudokusolver.algorithm.model.ExactCoverConstraint;
+import cl.bozz.sudokusolver.algorithm.model.ExactCoverStep;
+import cl.bozz.sudokusolver.algorithm.utils.ExactCoverConstraintUtils;
+import cl.bozz.sudokusolver.algorithm.utils.ExactCoverStepUtils;
 import lombok.RequiredArgsConstructor;
 
 import java.time.Duration;
