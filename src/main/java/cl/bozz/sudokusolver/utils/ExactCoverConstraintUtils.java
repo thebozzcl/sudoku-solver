@@ -3,9 +3,11 @@ package cl.bozz.sudokusolver.utils;
 import cl.bozz.sudokusolver.model.ExactCoverConstraint;
 import lombok.experimental.UtilityClass;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,6 +34,12 @@ public class ExactCoverConstraintUtils {
                 .min(Comparator.comparingInt(Map.Entry::getKey))
                 .map(Map.Entry::getValue)
                 .orElse(new HashSet<>());
+    }
+
+    public Map<Integer, Set<ExactCoverConstraint>> groupConstraintsByCardinality(final Set<ExactCoverConstraint> constraints, final Set<Integer> options) {
+        final Map<Integer, Set<ExactCoverConstraint>> result = constraints.stream()
+                .collect(Collectors.groupingBy(constraint -> ExactCoverConstraintUtils.getConstraintCardinality(constraint, options), Collectors.toSet()));
+        return result;
     }
 
     private int getConstraintCardinality(final ExactCoverConstraint constraint, final Set<Integer> options) {

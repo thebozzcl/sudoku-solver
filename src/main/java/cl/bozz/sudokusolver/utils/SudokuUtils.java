@@ -1,6 +1,6 @@
 package cl.bozz.sudokusolver.utils;
 
-import cl.bozz.sudokusolver.Main;
+import cl.bozz.sudokusolver.MainSudoku;
 import cl.bozz.sudokusolver.model.ExactCoverConstraint;
 import cl.bozz.sudokusolver.model.SudokuCellValues;
 import cl.bozz.sudokusolver.model.ExactCoverStep;
@@ -106,7 +106,7 @@ public class SudokuUtils {
         int cellOffset = 0;
         final Set<Integer> setValues = new HashSet<>();
         try (
-                final InputStream inputStream = Main.class.getClassLoader().getResourceAsStream(resourceName);
+                final InputStream inputStream = MainSudoku.class.getClassLoader().getResourceAsStream(resourceName);
                 final InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
                 final BufferedReader reader = new BufferedReader(streamReader)
         ) {

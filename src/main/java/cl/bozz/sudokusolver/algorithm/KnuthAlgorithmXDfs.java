@@ -21,25 +21,23 @@ public class KnuthAlgorithmXDfs implements ExactCoverAlgorithm {
 
     @Override
     public Set<ExactCoverStep> runAlgorithm(final ExactCoverStep initialStep) {
-
-
-        final Stack<ExactCoverStep> processingStack = new Stack<>();
-        processingStack.push(initialStep);
-
         final Set<ExactCoverStep> completeBoards = new HashSet<>();
         final AtomicInteger cacheHits = new AtomicInteger(0);
         final AtomicInteger culledByConstraintOptions = new AtomicInteger(0);
-        final Set<String> processedHashes = new HashSet<>();
+        final Set<String> queuedHashes = new HashSet<>();
 
+        final Stack<ExactCoverStep> processingStack = new Stack<>();
+        processingStack.push(initialStep);
+        queuedHashes.add(initialStep.toString());
         Instant nextUpdate = Instant.now().plus(UPDATE_INTERVAL);
 
         while(!processingStack.isEmpty()) {
             final ExactCoverStep currentStep = processingStack.pop();
-            processedHashes.add(currentStep.toString());
 
             final Instant now = Instant.now();
             if (now.isAfter(nextUpdate)) {
-                System.out.println("Processed: " + processedHashes.size());
+                System.out.println("In queue: " + processingStack.size());
+                System.out.println("Hashes: " + queuedHashes.size());
                 System.out.println("Cache Hits: " + cacheHits.get());
                 System.out.println("Culled By Constraint: " + culledByConstraintOptions.get());
                 System.out.println("Solutions: " + completeBoards.size());
@@ -48,13 +46,16 @@ public class KnuthAlgorithmXDfs implements ExactCoverAlgorithm {
                 nextUpdate = now.plus(UPDATE_INTERVAL);
             }
 
-            final Set<ExactCoverConstraint> options = ExactCoverConstraintUtils.getLowestCardinalityConstraints(currentStep.constraints(), currentStep.options());
-            if (options.isEmpty()) {
+            final Set<ExactCoverConstraint> optionsWithLowestCardinality = ExactCoverConstraintUtils.getLowestCardinalityConstraints(
+                    currentStep.constraints(),
+                    currentStep.options()
+            );
+            if (optionsWithLowestCardinality.isEmpty()) {
                 culledByConstraintOptions.incrementAndGet();
                 continue;
             }
 
-            options.forEach(constraint -> {
+            optionsWithLowestCardinality.forEach(constraint -> {
                 for (final int i : currentStep.options()) {
                     if (stopAtFirstResult && !completeBoards.isEmpty()) {
                         return;
@@ -65,13 +66,13 @@ public class KnuthAlgorithmXDfs implements ExactCoverAlgorithm {
                     }
 
                     final ExactCoverStep newStep = ExactCoverStepUtils.updateState(currentStep, i);
-                    if (processedHashes.contains(newStep.toString())) {
+                    if (queuedHashes.contains(newStep.toString())) {
                         cacheHits.incrementAndGet();
                         return;
                     }
+                    queuedHashes.add(newStep.toString());
 
                     if (newStep.constraints().isEmpty() && newStep.options().isEmpty()) {
-                        processedHashes.add(newStep.toString());
                         completeBoards.add(newStep);
                         System.out.println("Found solution: " + newStep);
                         System.out.println();
