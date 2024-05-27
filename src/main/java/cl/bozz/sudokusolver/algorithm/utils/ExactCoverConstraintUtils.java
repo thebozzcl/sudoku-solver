@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 @UtilityClass
 public class ExactCoverConstraintUtils {
+
     public <E extends Enum<?>> ExactCoverConstraint fromAcceptedEnumValues(final String name, final Set<E> acceptedValues, final Class<E> enumClass) {
         final Boolean[] accepted = new Boolean[enumClass.getEnumConstants().length];
         Arrays.fill(accepted, false);
