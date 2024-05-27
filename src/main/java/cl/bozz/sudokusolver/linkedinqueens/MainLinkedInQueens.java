@@ -15,22 +15,21 @@ public class MainLinkedInQueens {
         final Map<Character, Set<LinkedInQueensValue>> groups = LinkedInQueensUtils.readLinkedInQueensGroupsFromResource(args[0], values);
         final Map<Integer, Set<Integer>> exclusionaryValues = LinkedInQueensUtils.exclusionaryValues(values);
 
-        final ExactCoverStep initialBoard = new ExactCoverStep(
+        final ExactCoverStep initialStep = new ExactCoverStep(
                 new HashSet<>(),
                 values.stream()
                         .map(LinkedInQueensValue::number)
                         .collect(Collectors.toSet()),
-                LinkedInQueensUtils.createConstraints(values, groups),
-                null
+                LinkedInQueensUtils.createConstraints(values, groups)
         );
 
-        final Set<ExactCoverStep> completeBoards = new LinkedInQueensXDfs(true, exclusionaryValues).runAlgorithm(initialBoard);
+        final Set<ExactCoverStep> completeSteps = new LinkedInQueensXDfs(true, exclusionaryValues).runAlgorithm(initialStep);
 
         final int length = values.stream()
                 .mapToInt(LinkedInQueensValue::row)
                 .max().orElseThrow();
-        completeBoards.stream()
-                .map(board -> LinkedInQueensUtils.toPrettyString(length, board.values(), groups))
+        completeSteps.stream()
+                .map(board -> LinkedInQueensUtils.toPrettyString(length, board.choices(), groups))
                 .map(str -> str + '\n')
                 .forEach(System.out::println);
     }

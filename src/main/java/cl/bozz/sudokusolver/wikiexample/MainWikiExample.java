@@ -9,12 +9,12 @@ import java.util.stream.Collectors;
 public class MainWikiExample {
 
     public static void main(final String[] args) {
-        final ExactCoverStep initialBoard = WikiExampleUtils.wikiExampleInitialStep();
+        final ExactCoverStep initialStep = WikiExampleUtils.wikiExampleInitialStep();
 
-        final Set<ExactCoverStep> completeBoards = new KnuthAlgorithmXDfs(false).runAlgorithm(initialBoard);
+        final Set<ExactCoverStep> completeSteps = new KnuthAlgorithmXDfs(false).runAlgorithm(initialStep);
 
-        completeBoards.stream()
-                .map(ExactCoverStep::values)
+        completeSteps.stream()
+                .map(ExactCoverStep::choices)
                 .map(values -> values.stream().map(n -> WikiExampleValues.values()[n]).collect(Collectors.toSet()))
                 .forEach(System.out::println);
     }

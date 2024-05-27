@@ -9,11 +9,11 @@ import java.util.Set;
 public class MainSudoku {
 
     public static void main(final String[] args) throws IOException {
-        final ExactCoverStep initialBoard = SudokuUtils.readSudokuFromResource(args[0]);
+        final ExactCoverStep initialStep = SudokuUtils.readSudokuFromResource(args[0]);
 
-        final Set<ExactCoverStep> completeBoards = new KnuthAlgorithmXDfs(true).runAlgorithm(initialBoard);
+        final Set<ExactCoverStep> completeSteps = new KnuthAlgorithmXDfs(true).runAlgorithm(initialStep);
 
-        completeBoards.stream()
+        completeSteps.stream()
                 .map(SudokuUtils::toPrettyString)
                 .forEach(System.out::println);
     }

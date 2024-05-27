@@ -1,7 +1,6 @@
 package cl.bozz.sudokusolver.linkedinqueens;
 
 import cl.bozz.sudokusolver.algorithm.model.ExactCoverConstraint;
-import cl.bozz.sudokusolver.algorithm.model.ExactCoverStep;
 import cl.bozz.sudokusolver.sudoku.SudokuUtils;
 import lombok.experimental.UtilityClass;
 
@@ -171,7 +170,7 @@ public class LinkedInQueensUtils {
         final StringBuilder sb = new StringBuilder();
         for (int i = 0; i < rawResult.length; i++) {
             sb.append(rawResult[i]);
-            if (i % length == length - 1) {
+            if (i % length == length - 1 && i < rawResult.length - 1) {
                 sb.append('\n');
             }
         }

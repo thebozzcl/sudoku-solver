@@ -21,7 +21,7 @@ public class ExactCoverConstraintUtils {
 
     public Set<ExactCoverConstraint> findConstraintsWithValue(final Set<ExactCoverConstraint> constraints, final int value) {
         return constraints.stream()
-                .filter(constraint -> constraint.acceptedValues()[value])
+                .filter(constraint -> constraint.acceptedChoices()[value])
                 .collect(Collectors.toSet());
     }
 
@@ -34,15 +34,9 @@ public class ExactCoverConstraintUtils {
                 .orElse(new HashSet<>());
     }
 
-    public Map<Integer, Set<ExactCoverConstraint>> groupConstraintsByCardinality(final Set<ExactCoverConstraint> constraints, final Set<Integer> options) {
-        final Map<Integer, Set<ExactCoverConstraint>> result = constraints.stream()
-                .collect(Collectors.groupingBy(constraint -> ExactCoverConstraintUtils.getConstraintCardinality(constraint, options), Collectors.toSet()));
-        return result;
-    }
-
     private int getConstraintCardinality(final ExactCoverConstraint constraint, final Set<Integer> options) {
         return (int) options.stream()
-                .filter(o -> constraint.acceptedValues()[o])
+                .filter(o -> constraint.acceptedChoices()[o])
                 .count();
     }
 }

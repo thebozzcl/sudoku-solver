@@ -11,26 +11,36 @@ import java.util.stream.IntStream;
 
 @UtilityClass
 public class ExactCoverStepUtils {
+    /**
+     * Creates an empty exact cover step based on a set of enum choices and constraints
+     * @param enumClass
+     * @param constraints
+     * @return
+     */
     public static ExactCoverStep emptyForEnum(final Class<? extends Enum<?>> enumClass, final Set<ExactCoverConstraint> constraints) {
         return new ExactCoverStep(
                 new HashSet<>(),
                 IntStream.range(0, enumClass.getEnumConstants().length).boxed().collect(Collectors.toSet()),
-                constraints,
-                null
+                constraints
         );
     }
 
-    public ExactCoverStep updateState(final ExactCoverStep exactCoverStep, final int update) {
-        final Set<Integer> newValues = new HashSet<>(exactCoverStep.values());
+    /**
+     * Default implementation of the state update function for Algorithm.
+     * @param exactCoverStep
+     * @param update
+     * @return
+     */
+    public ExactCoverStep updateStep(final ExactCoverStep exactCoverStep, final int update) {
+        final Set<Integer> newValues = new HashSet<>(exactCoverStep.choices());
         newValues.add(update);
 
         final Set<ExactCoverConstraint> matchingConstraints = ExactCoverConstraintUtils.findConstraintsWithValue(exactCoverStep.constraints(), update);
         final Set<Integer> eliminatedOptions = matchingConstraints.stream()
-                .flatMap(constraint -> IntStream.range(0, constraint.acceptedValues().length)
-                        .filter(n -> constraint.acceptedValues()[n])
+                .flatMap(constraint -> IntStream.range(0, constraint.acceptedChoices().length)
+                        .filter(n -> constraint.acceptedChoices()[n])
                         .boxed()
-                )
-                .collect(Collectors.toSet());
+                ).collect(Collectors.toSet());
         final Set<ExactCoverConstraint> newConstraints = exactCoverStep.constraints().stream()
                 .filter(constraint -> !matchingConstraints.contains(constraint))
                 .collect(Collectors.toSet());
@@ -39,6 +49,6 @@ public class ExactCoverStepUtils {
                 .filter(n -> !eliminatedOptions.contains(n))
                 .collect(Collectors.toSet());
 
-        return new ExactCoverStep(newValues, newOptions, newConstraints, exactCoverStep);
+        return new ExactCoverStep(newValues, newOptions, newConstraints);
     }
 }

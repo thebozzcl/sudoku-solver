@@ -88,7 +88,7 @@ public class SudokuUtils {
                 "........."
         ));
 
-        exactCoverStep.values().stream()
+        exactCoverStep.choices().stream()
                 .map(n -> SudokuCellValues.values()[n])
                 .forEach(value -> {
                     char[] newLine = lines.get(value.getRow() - 1).toCharArray();
@@ -120,10 +120,10 @@ public class SudokuUtils {
             }
         }
 
-        ExactCoverStep exactCoverStep = ExactCoverStepUtils.emptyForEnum(SudokuCellValues.class, SudokuUtils.createEmptySudokuConstraints());
+        ExactCoverStep initialStep = ExactCoverStepUtils.emptyForEnum(SudokuCellValues.class, SudokuUtils.createEmptySudokuConstraints());
         for (final Integer setValue : setValues) {
-            exactCoverStep = ExactCoverStepUtils.updateState(exactCoverStep, setValue);
+            initialStep = ExactCoverStepUtils.updateStep(initialStep, setValue);
         }
-        return exactCoverStep;
+        return initialStep;
     }
 }

@@ -3,11 +3,17 @@ package cl.bozz.sudokusolver.algorithm.model;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public record ExactCoverStep(Set<Integer> values, Set<Integer> options, Set<ExactCoverConstraint> constraints, ExactCoverStep parent) {
+/**
+ * Represents a step taken in the exact cover algorithm.
+ * @param choices Choices that have been made so far
+ * @param options Remaining options to choose from
+ * @param constraints Sets of mutually-exclusive choices
+ */
+public record ExactCoverStep(Set<Integer> choices, Set<Integer> options, Set<ExactCoverConstraint> constraints) {
 
     @Override
     public String toString() {
-        return "[" + values.stream()
+        return "[" + choices.stream()
                 .sorted()
                 .map(Object::toString)
                 .collect(Collectors.joining(", ")) + "]";
