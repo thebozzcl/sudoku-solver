@@ -3,6 +3,7 @@ package cl.bozz.sudokusolver.linkedinqueens;
 import cl.bozz.sudokusolver.algorithm.model.ExactCoverConstraint;
 import cl.bozz.sudokusolver.sudoku.SudokuUtils;
 import lombok.experimental.UtilityClass;
+import org.graalvm.collections.Pair;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @UtilityClass
 public class LinkedInQueensUtils {
@@ -91,22 +93,42 @@ public class LinkedInQueensUtils {
                 .mapToInt(LinkedInQueensValue::row)
                 .max().orElseThrow();
 
+        final Set<Pair<LinkedInQueensValue, LinkedInQueensValue>> neighborPairs = values.stream()
+                .flatMap(root -> values.stream()
+                        .filter(v -> (v.row() >= root.row() - 1 && v.row() <= root.row() + 1) && (v.col() >= root.col() - 1 && v.col() <= root.col() + 1))
+                        .filter(v -> v.row() != root.row() || v.col() != root.col())
+                        .map(neighbor -> {
+                            final LinkedInQueensValue minor = root.number() < neighbor.number() ? root : neighbor;
+                            final LinkedInQueensValue major = root.number() > neighbor.number() ? root : neighbor;
+                            return Pair.create(minor, major);
+                        }))
+                .collect(Collectors.toSet());
+        final int neighborsLength = neighborPairs.size();
+
+        final int totalValues = values.size() + neighborsLength;
+
         final Set<ExactCoverConstraint> constraints = new HashSet<>();
 
         // Row/column constraints
         IntStream.range(1, length + 1).forEach(i -> {
-            constraints.add(rowConstraint(i, values));
-            constraints.add(columnConstraint(i, values));
+            constraints.add(rowConstraint(i, values, totalValues));
+            constraints.add(columnConstraint(i, values, totalValues));
         });
 
         // Group constraints
-        groups.forEach((label, group) -> constraints.add(groupConstraint(label, values.size(), group)));
+        groups.forEach((label, group) -> constraints.add(groupConstraint(label, group, totalValues)));
+
+        // Neighbor constraints
+        int offset = values.size();
+        for (final Pair<LinkedInQueensValue, LinkedInQueensValue> pair : neighborPairs) {
+            constraints.add(neighborConstraint(pair.getLeft(), pair.getRight(), totalValues, offset++));
+        }
 
         return constraints;
     }
 
-    public ExactCoverConstraint rowConstraint(final int row, final Set<LinkedInQueensValue> values) {
-        final Boolean[] acceptedValues = new Boolean[values.size()];
+    public ExactCoverConstraint rowConstraint(final int row, final Set<LinkedInQueensValue> values, final int totalValues) {
+        final Boolean[] acceptedValues = new Boolean[totalValues];
         Arrays.fill(acceptedValues, false);
         values.stream()
                 .filter(v -> v.row() == row)
@@ -119,8 +141,8 @@ public class LinkedInQueensUtils {
         );
     }
 
-    public ExactCoverConstraint columnConstraint(final int col, final Set<LinkedInQueensValue> values) {
-        final Boolean[] acceptedValues = new Boolean[values.size()];
+    public ExactCoverConstraint columnConstraint(final int col, final Set<LinkedInQueensValue> values, final int totalValues) {
+        final Boolean[] acceptedValues = new Boolean[totalValues];
         Arrays.fill(acceptedValues, false);
         values.stream()
                 .filter(v -> v.col() == col)
@@ -133,8 +155,8 @@ public class LinkedInQueensUtils {
         );
     }
 
-    public ExactCoverConstraint groupConstraint(final char label, final int valuesLength, final Set<LinkedInQueensValue> group) {
-        final Boolean[] acceptedValues = new Boolean[valuesLength];
+    public ExactCoverConstraint groupConstraint(final char label, final Set<LinkedInQueensValue> group, final int totalValues) {
+        final Boolean[] acceptedValues = new Boolean[totalValues];
         Arrays.fill(acceptedValues, false);
         group.stream()
                 .map(LinkedInQueensValue::number)
@@ -142,6 +164,23 @@ public class LinkedInQueensUtils {
 
         return new ExactCoverConstraint(
                 "G" + label,
+                acceptedValues
+        );
+    }
+
+    public ExactCoverConstraint neighborConstraint(
+            final LinkedInQueensValue left,
+            final LinkedInQueensValue right,
+            final int totalValues,
+            final int offset) {
+        final Boolean[] acceptedValues = new Boolean[totalValues];
+        Arrays.fill(acceptedValues, false);
+        acceptedValues[left.number()] = true;
+        acceptedValues[right.number()] = true;
+        acceptedValues[offset] = true;
+
+        return new ExactCoverConstraint(
+                String.format("N_R%dC%d_R%dC%d", left.row(), left.col(), right.row(), right.col()),
                 acceptedValues
         );
     }
@@ -165,7 +204,9 @@ public class LinkedInQueensUtils {
                    .mapToInt(LinkedInQueensValue::number)
                    .forEach(v -> rawResult[v] = label);
         });
-        values.forEach(v -> rawResult[v] = 'X');
+        values.stream()
+                .filter(v -> v < rawResult.length)
+                .forEach(v -> rawResult[v] = 'X');
 
         final StringBuilder sb = new StringBuilder();
         for (int i = 0; i < rawResult.length; i++) {

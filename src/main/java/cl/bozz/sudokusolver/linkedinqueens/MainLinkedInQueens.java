@@ -1,5 +1,7 @@
 package cl.bozz.sudokusolver.linkedinqueens;
 
+import cl.bozz.sudokusolver.algorithm.KnuthAlgorithmXDfs;
+import cl.bozz.sudokusolver.algorithm.model.ExactCoverConstraint;
 import cl.bozz.sudokusolver.algorithm.model.ExactCoverStep;
 
 import java.io.IOException;
@@ -7,23 +9,24 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class MainLinkedInQueens {
 
     public static void main(final String[] args) throws IOException {
         final Set<LinkedInQueensValue> values = LinkedInQueensUtils.readLinkedInQueensValuesFromResource(args[0]);
         final Map<Character, Set<LinkedInQueensValue>> groups = LinkedInQueensUtils.readLinkedInQueensGroupsFromResource(args[0], values);
-        final Map<Integer, Set<Integer>> exclusionaryValues = LinkedInQueensUtils.exclusionaryValues(values);
+        final Set<ExactCoverConstraint> constraints = LinkedInQueensUtils.createConstraints(values, groups);
 
         final ExactCoverStep initialStep = new ExactCoverStep(
                 new HashSet<>(),
-                values.stream()
-                        .map(LinkedInQueensValue::number)
+                IntStream.range(0, constraints.stream().findFirst().orElseThrow().acceptedChoices().length)
+                        .boxed()
                         .collect(Collectors.toSet()),
-                LinkedInQueensUtils.createConstraints(values, groups)
+                constraints
         );
 
-        final Set<ExactCoverStep> completeSteps = new LinkedInQueensXDfs(true, exclusionaryValues).runAlgorithm(initialStep);
+        final Set<ExactCoverStep> completeSteps = new KnuthAlgorithmXDfs(true).runAlgorithm(initialStep);
 
         final int length = values.stream()
                 .mapToInt(LinkedInQueensValue::row)
