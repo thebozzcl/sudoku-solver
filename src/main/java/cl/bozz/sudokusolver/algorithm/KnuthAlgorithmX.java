@@ -10,9 +10,9 @@ import java.util.Set;
 /**
  * Default implementation of Knuth's Algorithm X.
  */
-public class KnuthAlgorithmXDfs extends AbstractKnuthAlgorithmX {
+public class KnuthAlgorithmX extends AbstractKnuthAlgorithmX {
 
-    public KnuthAlgorithmXDfs(final boolean stopAtFirstResult) {
+    public KnuthAlgorithmX(final boolean stopAtFirstResult) {
         super(stopAtFirstResult);
     }
 

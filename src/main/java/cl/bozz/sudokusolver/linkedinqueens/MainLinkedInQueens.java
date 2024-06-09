@@ -1,6 +1,6 @@
 package cl.bozz.sudokusolver.linkedinqueens;
 
-import cl.bozz.sudokusolver.algorithm.KnuthAlgorithmXDfs;
+import cl.bozz.sudokusolver.algorithm.KnuthAlgorithmX;
 import cl.bozz.sudokusolver.algorithm.model.ExactCoverConstraint;
 import cl.bozz.sudokusolver.algorithm.model.ExactCoverStep;
 
@@ -26,7 +26,7 @@ public class MainLinkedInQueens {
                 constraints
         );
 
-        final Set<ExactCoverStep> completeSteps = new KnuthAlgorithmXDfs(true).runAlgorithm(initialStep);
+        final Set<ExactCoverStep> completeSteps = new KnuthAlgorithmX(true).runAlgorithm(initialStep);
 
         final int length = values.stream()
                 .mapToInt(LinkedInQueensValue::row)
