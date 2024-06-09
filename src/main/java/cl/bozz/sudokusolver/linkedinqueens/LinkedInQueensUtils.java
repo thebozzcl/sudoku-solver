@@ -1,7 +1,7 @@
 package cl.bozz.sudokusolver.linkedinqueens;
 
 import cl.bozz.sudokusolver.algorithm.model.ExactCoverConstraint;
-import cl.bozz.sudokusolver.linkedinqueens.model.Tuple;
+import cl.bozz.sudokusolver.linkedinqueens.model.Pair;
 import cl.bozz.sudokusolver.sudoku.SudokuUtils;
 import lombok.experimental.UtilityClass;
 
@@ -92,17 +92,16 @@ public class LinkedInQueensUtils {
                 .mapToInt(LinkedInQueensValue::row)
                 .max().orElseThrow();
 
-        final Set<Tuple<LinkedInQueensValue, LinkedInQueensValue>> neighborPairs = values.stream()
+        final Set<Pair<LinkedInQueensValue, LinkedInQueensValue>> diagonalNeighborPairs = values.stream()
                 .flatMap(root -> values.stream()
-                        .filter(v -> (v.row() >= root.row() - 1 && v.row() <= root.row() + 1) && (v.col() >= root.col() - 1 && v.col() <= root.col() + 1))
-                        .filter(v -> v.row() != root.row() || v.col() != root.col())
+                        .filter(v -> (v.row() == root.row() - 1 || v.row() == root.row() + 1) && (v.col() == root.col() - 1 || v.col() == root.col() + 1))
                         .map(neighbor -> {
                             final LinkedInQueensValue minor = root.number() < neighbor.number() ? root : neighbor;
                             final LinkedInQueensValue major = root.number() > neighbor.number() ? root : neighbor;
-                            return new Tuple<>(minor, major);
+                            return new Pair<>(minor, major);
                         }))
-                .collect(Collectors.<Tuple<LinkedInQueensValue, LinkedInQueensValue>>toSet());
-        final int neighborsLength = neighborPairs.size();
+                .collect(Collectors.<Pair<LinkedInQueensValue, LinkedInQueensValue>>toSet());
+        final int neighborsLength = diagonalNeighborPairs.size();
 
         final int totalValues = values.size() + neighborsLength;
 
@@ -119,7 +118,7 @@ public class LinkedInQueensUtils {
 
         // Neighbor constraints
         int offset = values.size();
-        for (final Tuple<LinkedInQueensValue, LinkedInQueensValue> pair : neighborPairs) {
+        for (final Pair<LinkedInQueensValue, LinkedInQueensValue> pair : diagonalNeighborPairs) {
             constraints.add(neighborConstraint(pair.left(), pair.right(), totalValues, offset++));
         }
 
