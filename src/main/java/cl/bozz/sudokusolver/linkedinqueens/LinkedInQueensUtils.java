@@ -94,7 +94,7 @@ public class LinkedInQueensUtils {
 
         final Set<Pair<LinkedInQueensValue, LinkedInQueensValue>> diagonalNeighborPairs = values.stream()
                 .flatMap(root -> values.stream()
-                        .filter(v -> v.row() == root.row() - 1 && v.col() == root.col() - 1)
+                        .filter(v -> v.row() == root.row() + 1 && (v.col() == root.col() - 1 || v.col() == root.col() + 1))
                         .map(neighbor -> {
                             final LinkedInQueensValue minor = root.number() < neighbor.number() ? root : neighbor;
                             final LinkedInQueensValue major = root.number() > neighbor.number() ? root : neighbor;
