@@ -55,7 +55,7 @@ public class KnuthAlgorithmX implements ExactCoverAlgorithm {
                 continue;
             }
 
-            lowestCardinalityConstraints.forEach(constraint -> {
+            lowestCardinalityConstraints.parallelStream().forEach(constraint -> {
                 for (final int i : currentStep.options()) {
                     if (stopAtFirstResult && !completeSteps.isEmpty()) {
                         return;
@@ -68,7 +68,7 @@ public class KnuthAlgorithmX implements ExactCoverAlgorithm {
                     final ExactCoverStep newStep = updateStep(currentStep, i);
                     if (!processingStack.push(newStep)) {
                         cacheHits.incrementAndGet();
-                        return;
+                        continue;
                     }
 
                     if (isComplete(newStep)) {
@@ -76,7 +76,9 @@ public class KnuthAlgorithmX implements ExactCoverAlgorithm {
                         System.out.println("Found solution: " + newStep);
                         System.out.println();
                     } else if (isValidIncomplete(currentStep)) {
-                        processingStack.push(newStep);
+                        synchronized (processingStack) {
+                            processingStack.push(newStep);
+                        }
                     }
                 }
             });
