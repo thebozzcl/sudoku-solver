@@ -73,6 +73,7 @@ public class KnuthAlgorithmX implements ExactCoverAlgorithm {
 
                     if (isComplete(newStep)) {
                         completeSteps.add(newStep);
+                        processingStack.register(newStep);
                         System.out.println("Found solution: " + newStep);
                         System.out.println();
                     } else if (isValidIncomplete(currentStep)) {

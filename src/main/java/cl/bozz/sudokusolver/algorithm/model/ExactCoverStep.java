@@ -21,6 +21,6 @@ public record ExactCoverStep(Set<Integer> choices, Set<Integer> options, Set<Exa
 
     @Override
     public int hashCode() {
-        return choices.hashCode();
+        return toString().hashCode();
     }
 }

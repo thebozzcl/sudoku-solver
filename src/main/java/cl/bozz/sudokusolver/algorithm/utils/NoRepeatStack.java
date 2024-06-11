@@ -36,4 +36,8 @@ public class NoRepeatStack<E> {
     public int hashesSize() {
         return hashes.size();
     }
+
+    public void register(final E element) {
+        hashes.add(element.hashCode());
+    }
 }
