@@ -1,7 +1,7 @@
 package cl.bozz.sudokusolver.algorithm.utils;
 
-import cl.bozz.sudokusolver.algorithm.model.ExactCoverStep;
 import cl.bozz.sudokusolver.algorithm.model.ExactCoverConstraint;
+import cl.bozz.sudokusolver.algorithm.model.ExactCoverStep;
 import lombok.experimental.UtilityClass;
 
 import java.util.HashSet;
