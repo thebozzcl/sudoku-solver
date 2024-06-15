@@ -1,4 +1,4 @@
-package cl.bozz.sudokusolver.linkedinqueens.model;
+package cl.bozz.sudokusolver.v1.linkedinqueens.model;
 
 public record Pair<T1, T2>(T1 left, T2 right) {
     @Override

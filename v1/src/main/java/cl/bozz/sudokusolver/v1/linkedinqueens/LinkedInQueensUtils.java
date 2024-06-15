@@ -1,8 +1,8 @@
-package cl.bozz.sudokusolver.linkedinqueens;
+package cl.bozz.sudokusolver.v1.linkedinqueens;
 
-import cl.bozz.sudokusolver.algorithm.model.ExactCoverConstraint;
-import cl.bozz.sudokusolver.linkedinqueens.model.Pair;
-import cl.bozz.sudokusolver.sudoku.SudokuUtils;
+import cl.bozz.sudokusolver.v1.algorithm.model.ExactCoverConstraint;
+import cl.bozz.sudokusolver.v1.sudoku.SudokuUtils;
+import cl.bozz.sudokusolver.v1.linkedinqueens.model.Pair;
 import lombok.experimental.UtilityClass;
 
 import java.io.BufferedReader;

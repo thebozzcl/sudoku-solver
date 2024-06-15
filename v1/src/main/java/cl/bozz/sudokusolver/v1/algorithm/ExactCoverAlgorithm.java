@@ -1,6 +1,6 @@
-package cl.bozz.sudokusolver.algorithm;
+package cl.bozz.sudokusolver.v1.algorithm;
 
-import cl.bozz.sudokusolver.algorithm.model.ExactCoverStep;
+import cl.bozz.sudokusolver.v1.algorithm.model.ExactCoverStep;
 
 import java.util.Set;
 

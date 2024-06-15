@@ -1,8 +1,8 @@
-package cl.bozz.sudokusolver.linkedinqueens;
+package cl.bozz.sudokusolver.v1.linkedinqueens;
 
-import cl.bozz.sudokusolver.algorithm.KnuthAlgorithmX;
-import cl.bozz.sudokusolver.algorithm.model.ExactCoverConstraint;
-import cl.bozz.sudokusolver.algorithm.model.ExactCoverStep;
+import cl.bozz.sudokusolver.v1.algorithm.KnuthAlgorithmX;
+import cl.bozz.sudokusolver.v1.algorithm.model.ExactCoverConstraint;
+import cl.bozz.sudokusolver.v1.algorithm.model.ExactCoverStep;
 
 import java.io.IOException;
 import java.util.HashSet;

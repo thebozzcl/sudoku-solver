@@ -1,4 +1,4 @@
-package cl.bozz.sudokusolver.sudoku;
+package cl.bozz.sudokusolver.v1.sudoku;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

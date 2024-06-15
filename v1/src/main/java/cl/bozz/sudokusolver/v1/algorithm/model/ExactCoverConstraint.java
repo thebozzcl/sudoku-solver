@@ -1,4 +1,4 @@
-package cl.bozz.sudokusolver.algorithm.model;
+package cl.bozz.sudokusolver.v1.algorithm.model;
 
 /**
  * Represents a set of mutually exclusive choices to be made by the algorithm - once a value is picked, the remaining

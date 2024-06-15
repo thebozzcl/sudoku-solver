@@ -1,4 +1,4 @@
-package cl.bozz.sudokusolver.linkedinqueens;
+package cl.bozz.sudokusolver.v1.linkedinqueens;
 
 public record LinkedInQueensValue(int number, int row, int col) {
     @Override

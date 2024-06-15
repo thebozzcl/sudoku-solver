@@ -1,7 +1,7 @@
-package cl.bozz.sudokusolver.wikiexample;
+package cl.bozz.sudokusolver.v1.wikiexample;
 
-import cl.bozz.sudokusolver.algorithm.KnuthAlgorithmX;
-import cl.bozz.sudokusolver.algorithm.model.ExactCoverStep;
+import cl.bozz.sudokusolver.v1.algorithm.KnuthAlgorithmX;
+import cl.bozz.sudokusolver.v1.algorithm.model.ExactCoverStep;
 
 import java.util.Set;
 import java.util.stream.Collectors;

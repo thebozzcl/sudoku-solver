@@ -1,4 +1,4 @@
-package cl.bozz.sudokusolver.wikiexample;
+package cl.bozz.sudokusolver.v1.wikiexample;
 
 public enum WikiExampleValues {
     A,

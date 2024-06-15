@@ -1,4 +1,4 @@
-package cl.bozz.sudokusolver.algorithm.utils;
+package cl.bozz.sudokusolver.v1.algorithm.utils;
 
 import java.util.HashSet;
 import java.util.Set;
