@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+@Getter
 public class SparseMatrix {
     final Map<Integer, Set<Cell>> rows = new HashMap<>();
     final Map<Integer, Set<Cell>> cols = new HashMap<>();
@@ -20,13 +21,13 @@ public class SparseMatrix {
         for (int i = 0; i <= rowCount; i++) {
             rows.put(i, new HashSet<>());
             for (int j = 0; j < columnCount; j++) {
-                final Cell cell = new Cell(i, j, i == 0);
+                final Cell cell = new Cell(i, j + 1, i == 0);
 
                 rows.get(i).add(cell);
-                if (!cols.containsKey(j)) {
-                    cols.put(j, new HashSet<>());
+                if (!cols.containsKey(j + 1)) {
+                    cols.put(j + 1, new HashSet<>());
                 }
-                cols.get(j).add(cell);
+                cols.get(j + 1).add(cell);
 
                 tempMatrix[i][j] = cell;
             }
@@ -71,6 +72,16 @@ public class SparseMatrix {
         cell.getUp().setDown(cell.getDown());
         cell.getDown().setUp(cell.getUp());
 
+        rows.get(cell.getRow()).remove(cell);
+        if (rows.get(cell.getRow()).isEmpty()) {
+            rows.remove(cell.getRow());
+        }
+
+        cols.get(cell.getCol()).remove(cell);
+        if (cols.get(cell.getCol()).isEmpty()) {
+            cols.remove(cell.getCol());
+        }
+
         return cell;
     }
 
@@ -80,6 +91,11 @@ public class SparseMatrix {
         rowCells.forEach(cell -> {
             cell.getUp().setDown(cell.getDown());
             cell.getDown().setUp(cell.getUp());
+
+            cols.get(cell.getCol()).remove(cell);
+            if (cols.get(cell.getCol()).isEmpty()) {
+                cols.remove(cell.getCol());
+            }
         });
         rows.remove(row);
 
@@ -92,7 +108,13 @@ public class SparseMatrix {
         colCells.forEach(cell -> {
             cell.getLeft().setRight(cell.getRight());
             cell.getRight().setLeft(cell.getLeft());
+
+            rows.get(cell.getRow()).remove(cell);
+            if (rows.get(cell.getRow()).isEmpty()) {
+                rows.remove(cell.getRow());
+            }
         });
+        cols.remove(col);
 
         return colCells;
     }
@@ -102,6 +124,16 @@ public class SparseMatrix {
         cell.getRight().setLeft(cell);
         cell.getUp().setDown(cell);
         cell.getDown().setUp(cell);
+
+        if (!rows.containsKey(cell.getRow())) {
+            rows.put(cell.getRow(), new HashSet<>());
+        }
+        rows.get(cell.getRow()).add(cell);
+
+        if (!cols.containsKey(cell.getCol())) {
+            cols.put(cell.getCol(), new HashSet<>());
+        }
+        cols.get(cell.getCol()).add(cell);
     }
 
     public void insertRow(final int row, final Set<Cell> cells) {
@@ -113,6 +145,7 @@ public class SparseMatrix {
         cells.forEach(cell -> {
             cell.getUp().setDown(cell);
             cell.getDown().setUp(cell);
+            cols.get(cell.getCol()).add(cell);
         });
     }
 
@@ -125,6 +158,7 @@ public class SparseMatrix {
         cells.forEach(cell -> {
             cell.getLeft().setRight(cell);
             cell.getRight().setLeft(cell);
+            rows.get(cell.getRow()).add(cell);
         });
     }
 
