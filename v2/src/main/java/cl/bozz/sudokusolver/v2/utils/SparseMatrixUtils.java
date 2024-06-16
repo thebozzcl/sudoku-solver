@@ -21,7 +21,11 @@ public class SparseMatrixUtils {
             final char[] rowChars = new char[maxRow + 1];
             Arrays.fill(rowChars, '.');
             if (matrix.getRows().containsKey(i)) {
-                rowChars[0] = (char)('0' + i);
+                if (i == 0) {
+                    rowChars[0] = ' ';
+                } else {
+                    rowChars[0] = (char) ('0' + i);
+                }
 
                 final Set<SparseMatrix.Cell> cells = matrix.getRows().get(i);
 
