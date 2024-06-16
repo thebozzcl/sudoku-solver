@@ -1,6 +1,8 @@
 package cl.bozz.sudokusolver.v2.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,27 +31,27 @@ public class SparseMatrix {
                 final Cell cell = tempMatrix[i][j];
                 final Cell left = tempMatrix[i][(columnCount + j - 1) % columnCount];
                 final Cell right = tempMatrix[i][(columnCount + j + 1) % columnCount];
-                final Cell up = tempMatrix[(rowCount + i - 1) % rowCount][j];
-                final Cell down = tempMatrix[(rowCount + i + 1) % rowCount][j];
+                final Cell up = tempMatrix[(rowCount + i) % (rowCount + 1)][j];
+                final Cell down = tempMatrix[(rowCount + i + 2) % (rowCount + 1)][j];
 
-                cell.left = left;
-                left.right = cell;
+                cell.setLeft(left);
+                left.setRight(cell);
 
-                cell.right = right;
-                right.left = cell;
+                cell.setRight(right);
+                right.setLeft(cell);
 
-                cell.up = up;
-                up.down = cell;
+                cell.setUp(up);
+                up.setDown(cell);
 
-                cell.down = down;
-                down.up = cell;
+                cell.setDown(down);
+                down.setUp(cell);
             }
         }
     }
 
     public Cell remove(final int row, final int col) {
         final Cell targetCell = allCells.get(row).stream()
-                .filter(cell -> cell.col == col)
+                .filter(cell -> cell.getCol() == col)
                 .findFirst()
                 .orElseThrow();
 
@@ -58,30 +60,32 @@ public class SparseMatrix {
 
     public Cell remove(final Cell cell) {
 
-        cell.left.right = cell.right;
-        cell.right.left = cell.left;
-        cell.up.down = cell.down;
-        cell.down.up = cell.up;
+        cell.getLeft().setRight(cell.getRight());
+        cell.getRight().setLeft(cell.getLeft());
+        cell.getUp().setDown(cell.getDown());
+        cell.getDown().setUp(cell.getUp());
 
         return cell;
     }
 
     public void insert(final Cell cell) {
-        cell.left.right = cell;
-        cell.right.left = cell;
-        cell.up.down = cell;
-        cell.down.up = cell;
+        cell.getLeft().setRight(cell);
+        cell.getRight().setLeft(cell);
+        cell.getUp().setDown(cell);
+        cell.getDown().setUp(cell);
     }
 
-    @Data
+    @Getter
+    @Setter
+    @RequiredArgsConstructor
     public static class Cell {
-        Cell up = this;
-        Cell down = this;
-        Cell left = this;
-        Cell right = this;
-        final int row;
-        final int col;
-        final boolean isHeader;
+        private Cell up = this;
+        private Cell down = this;
+        private Cell left = this;
+        private Cell right = this;
+        private final int row;
+        private final int col;
+        private final boolean isHeader;
 
         @Override
         public String toString() {
