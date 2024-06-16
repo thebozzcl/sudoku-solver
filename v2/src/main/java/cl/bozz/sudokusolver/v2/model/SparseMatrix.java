@@ -10,18 +10,24 @@ import java.util.Map;
 import java.util.Set;
 
 public class SparseMatrix {
-    final Map<Integer, Set<Cell>> allCells = new HashMap<>();
+    final Map<Integer, Set<Cell>> rows = new HashMap<>();
+    final Map<Integer, Set<Cell>> cols = new HashMap<>();
 
     public SparseMatrix(
             final int columnCount, final int rowCount
     ) {
         final Cell[][] tempMatrix = new Cell[rowCount + 1][columnCount];
         for (int i = 0; i <= rowCount; i++) {
-            allCells.put(i, new HashSet<>());
+            rows.put(i, new HashSet<>());
             for (int j = 0; j < columnCount; j++) {
                 final Cell cell = new Cell(i, j, i == 0);
 
-                allCells.get(i).add(cell);
+                rows.get(i).add(cell);
+                if (!cols.containsKey(j)) {
+                    cols.put(j, new HashSet<>());
+                }
+                cols.get(j).add(cell);
+
                 tempMatrix[i][j] = cell;
             }
         }
@@ -49,16 +55,16 @@ public class SparseMatrix {
         }
     }
 
-    public Cell remove(final int row, final int col) {
-        final Cell targetCell = allCells.get(row).stream()
+    public Cell removeCell(final int row, final int col) {
+        final Cell targetCell = rows.get(row).stream()
                 .filter(cell -> cell.getCol() == col)
                 .findFirst()
                 .orElseThrow();
 
-        return remove(targetCell);
+        return removeCell(targetCell);
     }
 
-    public Cell remove(final Cell cell) {
+    public Cell removeCell(final Cell cell) {
 
         cell.getLeft().setRight(cell.getRight());
         cell.getRight().setLeft(cell.getLeft());
@@ -66,6 +72,24 @@ public class SparseMatrix {
         cell.getDown().setUp(cell.getUp());
 
         return cell;
+    }
+
+    public Set<Cell> removeRow(final int row) {
+        final Set<Cell> rowCells = rows.get(row);
+
+        rowCells.forEach(cell -> {
+            cell.getUp().setDown(cell.getDown());
+            cell.getDown().setUp(cell.getUp());
+        });
+        rows.remove(row);
+
+        return rowCells;
+    }
+
+    public Set<Cell> removeCol(final int col) {
+        final Set<Cell> colCells = cols.get(col);
+
+        return colCells;
     }
 
     public void insert(final Cell cell) {
