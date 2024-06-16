@@ -89,6 +89,11 @@ public class SparseMatrix {
     public Set<Cell> removeCol(final int col) {
         final Set<Cell> colCells = cols.get(col);
 
+        colCells.forEach(cell -> {
+            cell.getLeft().setRight(cell.getRight());
+            cell.getRight().setLeft(cell.getLeft());
+        });
+
         return colCells;
     }
 
@@ -97,6 +102,30 @@ public class SparseMatrix {
         cell.getRight().setLeft(cell);
         cell.getUp().setDown(cell);
         cell.getDown().setUp(cell);
+    }
+
+    public void insertRow(final int row, final Set<Cell> cells) {
+        if (rows.containsKey(row)) {
+            throw new IllegalArgumentException();
+        }
+        rows.put(row, cells);
+
+        cells.forEach(cell -> {
+            cell.getUp().setDown(cell);
+            cell.getDown().setUp(cell);
+        });
+    }
+
+    public void insertCol(final int col, final Set<Cell> cells) {
+        if (cols.containsKey(col)) {
+            throw new IllegalArgumentException();
+        }
+        cols.put(col, cells);
+
+        cells.forEach(cell -> {
+            cell.getLeft().setRight(cell);
+            cell.getRight().setLeft(cell);
+        });
     }
 
     @Getter
