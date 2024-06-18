@@ -1,13 +1,11 @@
 package cl.bozz.sudokusolver.v2.model;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-@Getter
 @RequiredArgsConstructor
 public enum Operator {
     REMOVE_ROW(start -> {
@@ -15,6 +13,7 @@ public enum Operator {
         do {
             cell.getUp().setDown(cell.getDown());
             cell.getDown().setUp(cell.getUp());
+            cell.getHeader().setSize(cell.getHeader().getSize() - 1);
 
             cell = cell.getRight();
         } while (cell != start);
@@ -37,6 +36,7 @@ public enum Operator {
         do {
             cell.getUp().setDown(cell);
             cell.getDown().setUp(cell);
+            cell.getHeader().setSize(cell.getHeader().getSize() + 1);
 
             cell = cell.getRight();
         } while (cell != start);
@@ -63,6 +63,11 @@ public enum Operator {
     }};
 
     private final Function<Cell, Cell> op;
+
+    public Cell apply(final Cell cell) {
+        return op.apply(cell);
+    }
+
     public Operator getInverse() {
         return REVERSE_OP.get(this);
     }

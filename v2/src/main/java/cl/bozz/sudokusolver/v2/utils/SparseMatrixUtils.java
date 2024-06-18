@@ -7,6 +7,7 @@ import lombok.experimental.UtilityClass;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @UtilityClass
 public class SparseMatrixUtils {
@@ -26,7 +27,8 @@ public class SparseMatrixUtils {
             Cell lastCreated = null;
             for (int j = 0; j < conditions[i].length; j++) {
                 if (conditions[i][j]) {
-                    final Cell cell = new Cell(i + 1, j + 1);
+                    final Cell cell = new Cell(i + 1, j + 1, colRoot);
+                    colRoot.setSize(colRoot.getSize() + 1);
 
                     cell.setDown(colRoot);
                     cell.setUp(colRoot.getUp());
@@ -95,5 +97,66 @@ public class SparseMatrixUtils {
             }
         }
         return sb.toString();
+    }
+    public String toDetailedPrint(final Header root, int rows, int cols) {
+
+        final String[][] matrix = new String[rows + 1][cols + 1];
+        for (int i = 0; i < rows + 1; i++) {
+            final String[] row = new String[cols + 1];
+            Arrays.fill(row, null);
+            matrix[i] = row;
+        }
+
+        Header header = root;
+        int tempPadding = 0;
+        do {
+            matrix[0][header.getCol()] = detailedCellPrint(header);
+            tempPadding = Math.max(tempPadding, matrix[0][header.getCol()].length());
+
+            Cell cell = header.getDown();
+            while (cell != header) {
+                matrix[cell.getRow()][0] = cell.getRow() + "";
+                matrix[cell.getRow()][cell.getCol()] = detailedCellPrint(cell);
+                tempPadding = Math.max(tempPadding, matrix[cell.getRow()][0].length());
+                cell = cell.getDown();
+            }
+
+            header = (Header) header.getRight();
+        } while (header != root);
+        final int padding = tempPadding;
+
+        final String filler = " ".repeat(padding);
+
+        final String interLinePadding = IntStream.range(0, cols + 1)
+                .mapToObj(m -> "─".repeat(padding))
+                .collect(Collectors.joining("┼"));
+
+        final StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < rows + 1; i++) {
+            for (int j = 0; j < cols + 1; j++) {
+                if (matrix[i][j] == null) {
+                    matrix[i][j] = filler;
+                } else {
+                    matrix[i][j] = matrix[i][j] + " ".repeat(padding - matrix[i][j].length());
+                }
+            }
+            sb.append(String.join("│", matrix[i]));
+            if (i < rows) {
+                sb.append("\n");
+                sb.append(interLinePadding);
+                sb.append("\n");
+            }
+        }
+        return sb.toString();
+    }
+
+    public String detailedCellPrint(final Cell cell) {
+        return String.format(
+                "%s [%s]",
+                cell.toString(),
+                Stream.of(cell.getUp(), cell.getDown(), cell.getLeft(), cell.getRight())
+                        .map(Cell::toString)
+                        .collect(Collectors.joining(", "))
+        );
     }
 }

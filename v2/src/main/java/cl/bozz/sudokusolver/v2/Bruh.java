@@ -17,23 +17,23 @@ public class Bruh {
                 },
                 new String[] { "A", "B", "C", "D" }
         );
-        System.out.println(SparseMatrixUtils.toPrettyPrint(sparseMatrix, 4, 4));
+        System.out.println(SparseMatrixUtils.toDetailedPrint(sparseMatrix, 4, 4));
         System.out.println();
 
-        final Cell removedCol = Operator.REMOVE_COL.getOp().apply(sparseMatrix.getRight().getRight());
-        System.out.println(SparseMatrixUtils.toPrettyPrint(sparseMatrix, 4, 4));
+        final Cell removedCol = Operator.REMOVE_COL.apply(sparseMatrix.getRight().getRight());
+        System.out.println(SparseMatrixUtils.toDetailedPrint(sparseMatrix, 4, 4));
         System.out.println();
 
-        Operator.REMOVE_COL.getInverse().getOp().apply(removedCol);
-        System.out.println(SparseMatrixUtils.toPrettyPrint(sparseMatrix, 4, 4));
+        Operator.REMOVE_COL.getInverse().apply(removedCol);
+        System.out.println(SparseMatrixUtils.toDetailedPrint(sparseMatrix, 4, 4));
         System.out.println();
 
-        final Cell removedRow = Operator.REMOVE_ROW.getOp().apply(sparseMatrix.getRight().getDown().getDown());
-        System.out.println(SparseMatrixUtils.toPrettyPrint(sparseMatrix, 4, 4));
+        final Cell removedRow = Operator.REMOVE_ROW.apply(sparseMatrix.getRight().getDown().getDown());
+        System.out.println(SparseMatrixUtils.toDetailedPrint(sparseMatrix, 4, 4));
         System.out.println();
 
-        Operator.REMOVE_ROW.getInverse().getOp().apply(removedRow);
-        System.out.println(SparseMatrixUtils.toPrettyPrint(sparseMatrix, 4, 4));
+        Operator.REMOVE_ROW.getInverse().apply(removedRow);
+        System.out.println(SparseMatrixUtils.toDetailedPrint(sparseMatrix, 4, 4));
         System.out.println();
 
         int a = 0;
