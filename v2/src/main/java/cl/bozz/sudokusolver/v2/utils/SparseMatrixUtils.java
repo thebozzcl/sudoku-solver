@@ -68,16 +68,16 @@ public class SparseMatrixUtils {
         for (int i = 0; i < rows + 1; i++) {
             final String[] row = new String[cols + 1];
             Arrays.fill(row, filler);
-            row[0] = String.format(paddedFormat, i);
             matrix[i] = row;
         }
 
         Header header = root;
         do {
-            matrix[header.getRow()][header.getCol()] = String.format(paddedFormat, header.getCol());
+            matrix[0][header.getCol()] = String.format(paddedFormat, header.getCol());
 
             Cell cell = header.getDown();
             while (cell != header) {
+                matrix[cell.getRow()][0] = String.format(paddedFormat, cell.getRow());
                 matrix[cell.getRow()][cell.getCol()] = marker;
                 cell = cell.getDown();
             }
