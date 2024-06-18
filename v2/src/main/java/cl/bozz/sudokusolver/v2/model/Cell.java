@@ -11,6 +11,10 @@ public class Cell {
 
     @Override
     public String toString() {
+        return coordString();
+    }
+
+    public String coordString() {
         return String.format(
                 "(%d, %d)",
                 row,

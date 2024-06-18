@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 @UtilityClass
 public class SparseMatrixUtils {
     public Header buildSparseMatrix(final boolean[][] conditions, final String[] labels) {
-        final Header root = new Header("root", 0, 0);
+        final Header root = new Header("O", 0, 0);
 
         for (int j = 0; j < labels.length; j++) {
             final Header header = new Header(labels[j], 0, j + 1);
@@ -155,7 +155,7 @@ public class SparseMatrixUtils {
                 "%s [%s]",
                 cell.toString(),
                 Stream.of(cell.getUp(), cell.getDown(), cell.getLeft(), cell.getRight())
-                        .map(Cell::toString)
+                        .map(Cell::coordString)
                         .collect(Collectors.joining(", "))
         );
     }
