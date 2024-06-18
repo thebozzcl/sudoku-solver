@@ -1,14 +1,14 @@
 package cl.bozz.sudokusolver.v2;
 
 import cl.bozz.sudokusolver.v2.model.Cell;
-import cl.bozz.sudokusolver.v2.model.Header;
-import cl.bozz.sudokusolver.v2.model.Operator;
+import cl.bozz.sudokusolver.v2.model.ColumnHeader;
+import cl.bozz.sudokusolver.v2.operator.Operator;
 import cl.bozz.sudokusolver.v2.utils.SparseMatrixUtils;
 
 public class Bruh {
     public static void main(final String[] args) {
 
-        final Header sparseMatrix = SparseMatrixUtils.buildSparseMatrix(
+        final ColumnHeader sparseMatrix = SparseMatrixUtils.buildSparseMatrix(
                 new boolean[][] {
                         new boolean[] { false, false, false, true },
                         new boolean[] { false, true, true, false },

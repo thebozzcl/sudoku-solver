@@ -5,11 +5,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Header extends Cell {
+public class ColumnHeader extends Cell {
     private final String label;
     private int size = 0;
 
-    public Header(final String label, final int row, final int col) {
+    public ColumnHeader(final String label, final int row, final int col) {
         super(row, col, null);
         this.label = label;
     }

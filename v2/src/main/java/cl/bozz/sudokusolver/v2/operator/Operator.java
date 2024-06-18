@@ -1,5 +1,6 @@
-package cl.bozz.sudokusolver.v2.model;
+package cl.bozz.sudokusolver.v2.operator;
 
+import cl.bozz.sudokusolver.v2.model.Cell;
 import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;

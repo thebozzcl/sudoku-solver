@@ -1,7 +1,7 @@
 package cl.bozz.sudokusolver.v2.utils;
 
 import cl.bozz.sudokusolver.v2.model.Cell;
-import cl.bozz.sudokusolver.v2.model.Header;
+import cl.bozz.sudokusolver.v2.model.ColumnHeader;
 import lombok.experimental.UtilityClass;
 
 import java.util.Arrays;
@@ -11,11 +11,11 @@ import java.util.stream.Stream;
 
 @UtilityClass
 public class SparseMatrixUtils {
-    public Header buildSparseMatrix(final boolean[][] conditions, final String[] labels) {
-        final Header root = new Header("O", 0, 0);
+    public ColumnHeader buildSparseMatrix(final boolean[][] conditions, final String[] labels) {
+        final ColumnHeader root = new ColumnHeader("O", 0, 0);
 
         for (int j = 0; j < labels.length; j++) {
-            final Header header = new Header(labels[j], 0, j + 1);
+            final ColumnHeader header = new ColumnHeader(labels[j], 0, j + 1);
             header.setRight(root);
             header.setLeft(root.getLeft());
             root.getLeft().setRight(header);
@@ -23,7 +23,7 @@ public class SparseMatrixUtils {
         }
 
         for (int i = 0; i < conditions.length; i++) {
-            Header colRoot = (Header)root.getRight();
+            ColumnHeader colRoot = (ColumnHeader)root.getRight();
             Cell lastCreated = null;
             for (int j = 0; j < conditions[i].length; j++) {
                 if (conditions[i][j]) {
@@ -43,14 +43,14 @@ public class SparseMatrixUtils {
                     }
                     lastCreated = cell;
                 }
-                colRoot = (Header)colRoot.getRight();
+                colRoot = (ColumnHeader)colRoot.getRight();
             }
         }
 
         return root;
     }
 
-    public String toPrettyPrint(final Header root, int rows, int cols) {
+    public String toPrettyPrint(final ColumnHeader root, int rows, int cols) {
         final int padding = Integer.toString(cols + 1).length();
         final String paddedFormat = "%0" + padding + "d";
 
@@ -73,7 +73,7 @@ public class SparseMatrixUtils {
             matrix[i] = row;
         }
 
-        Header header = root;
+        ColumnHeader header = root;
         do {
             matrix[0][header.getCol()] = String.format(paddedFormat, header.getCol());
 
@@ -84,7 +84,7 @@ public class SparseMatrixUtils {
                 cell = cell.getDown();
             }
 
-            header = (Header) header.getRight();
+            header = (ColumnHeader) header.getRight();
         } while (header != root);
 
         final StringBuilder sb = new StringBuilder();
@@ -98,7 +98,7 @@ public class SparseMatrixUtils {
         }
         return sb.toString();
     }
-    public String toDetailedPrint(final Header root, int rows, int cols) {
+    public String toDetailedPrint(final ColumnHeader root, int rows, int cols) {
 
         final String[][] matrix = new String[rows + 1][cols + 1];
         for (int i = 0; i < rows + 1; i++) {
@@ -107,7 +107,7 @@ public class SparseMatrixUtils {
             matrix[i] = row;
         }
 
-        Header header = root;
+        ColumnHeader header = root;
         int tempPadding = 0;
         do {
             matrix[0][header.getCol()] = detailedCellPrint(header);
@@ -121,7 +121,7 @@ public class SparseMatrixUtils {
                 cell = cell.getDown();
             }
 
-            header = (Header) header.getRight();
+            header = (ColumnHeader) header.getRight();
         } while (header != root);
         final int padding = tempPadding;
 
