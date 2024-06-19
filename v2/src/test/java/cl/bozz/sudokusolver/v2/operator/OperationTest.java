@@ -52,7 +52,7 @@ public class OperationTest {
                         new boolean[] { true, false, true, false },
                         new boolean[] { true, false, false, false }
                 },
-                new String[] { "A", "B", "C", "D" }
+                new String[] { "O", "A", "B", "C", "D" }
         );
     }
 }

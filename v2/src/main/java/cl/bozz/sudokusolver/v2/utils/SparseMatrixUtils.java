@@ -12,10 +12,10 @@ import java.util.stream.Stream;
 @UtilityClass
 public class SparseMatrixUtils {
     public ColumnHeader buildSparseMatrix(final boolean[][] conditions, final String[] labels) {
-        final ColumnHeader root = new ColumnHeader("O", 0, 0);
+        final ColumnHeader root = new ColumnHeader(labels[0], 0, 0);
 
-        for (int j = 0; j < labels.length; j++) {
-            final ColumnHeader header = new ColumnHeader(labels[j], 0, j + 1);
+        for (int j = 1; j < labels.length; j++) {
+            final ColumnHeader header = new ColumnHeader(labels[j], 0, j);
             header.setRight(root);
             header.setLeft(root.getLeft());
             root.getLeft().setRight(header);
@@ -50,21 +50,17 @@ public class SparseMatrixUtils {
         return root;
     }
 
-    public String toPrettyPrint(final ColumnHeader root, int rows, int cols) {
+    public String toSimplePrint(final ColumnHeader root, int rows, int cols) {
         final int padding = Integer.toString(cols + 1).length();
         final String paddedFormat = "%0" + padding + "d";
 
-        final String filler = IntStream.range(0, padding)
-                .mapToObj(n -> " ")
-                .collect(Collectors.joining());
+        final String filler = " ".repeat(padding);
 
         final String marker = filler.substring(0, filler.length() / 2) + 'X' + filler.substring(filler.length() / 2 + 1);
 
         final String interLinePadding = IntStream.range(0, cols + 1)
-                .mapToObj(m -> IntStream.range(0, padding)
-                        .mapToObj(n -> "─")
-                        .collect(Collectors.joining())
-                ).collect(Collectors.joining("┼"));
+                .mapToObj(m -> "─".repeat(padding))
+                .collect(Collectors.joining("┼"));
 
         final String[][] matrix = new String[rows + 1][cols + 1];
         for (int i = 0; i < rows + 1; i++) {
